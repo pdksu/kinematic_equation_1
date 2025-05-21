@@ -1,23 +1,45 @@
-#!python
-# Python 3.9.6
+# Comments in Python start with \"#\". The Python interpreter ignores whatever is 
+#    after the \"#\" so we can leave human readable notes here.
 #
-#  2025-03-29 Simple differential equation integrator
-#     for kinematic equation number 1
+# import functions we'll need later. These modules are kind of the magic of python,
+#   they allow for a relatively lightweight language that can be extended easily 
+#   to have great power
+#   For this example we use PyPlot, a popular graphing package. We also use numpy 
+#   which gives access to a lot of math tools.
 #
-
-def dx(v:float, dt:float) -> float:
+import numpy as np
+from matplotlib import pyplot as plt
+#
+# define a function. This is one of the most important things in programming, writing a bit of code
+#    that can be used later. It's a function, in this case a function of two variables.
+#
+def dx(v, dt): 
     return v*dt
 
-if __name__ == '__main__':
-    dt = 0.001  # 1 millisecond
-    v = 1.5     # in units of m/s
-    x_0 = 0.0   # meters
-    t_0 = 0.0   # seconds
-    t_f = 5     # seconds
+x_1 = dx(3,0.001)   # Use the function
+print(f"Our first differential dx = {x_1}")  # Display the result
+# set initial conditions
+t_0 = 0
+x_0 = 0
+t_f = 5     # seconds
+dt = 0.5    # seconds.     ___ TRY CHANGING THIS YOURSELF ____
+v = 2       # meters / second
+num_pts = int( (t_f - t_0) / dt )  # int() truncates floating point numbers
 
-    t = t_0
-    x = x_0
-    while (t<t_f):
-        x += dx(v,dt)
-        t += dt
-        print(f"{t}, {x}")
+# create variables to store our results
+t = list(np.zeros(num_pts))
+x = list(np.zeros(num_pts))
+x[0] = x_0
+
+# add up the baby steps
+for i in range(num_pts-1):
+    t[i+1] = t[i] + dt
+    x[i+1] = x[i] + dx(v, dt)
+
+# graph the result
+plt.plot(t,x,'.')
+plt.xlabel("Time (s)")
+plt.ylabel("Distance (m)")
+plt.title("Kinematic Equation #1")
+plt.show()
+print(f"This graph is generated from lists with {len(x)} points.\\nThe variable num_pts = {num_pts}")
